@@ -131,6 +131,32 @@ automation:
           message: "Začínají Zprávy na ČT1!"
 ```
 
+#### Zapni TV 5 minut před oblíbeným pořadem
+```yaml
+automation:
+  - alias: "Zapni TV před pořadem"
+    trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    condition:
+      - condition: template
+        value_template: >
+          {% set upcoming = state_attr('sensor.tv_program_ct1', 'upcoming_programs') %}
+          {% if upcoming and upcoming|length > 0 %}
+            {% set next_program = upcoming[0] %}
+            {% set now = now() %}
+            {% set program_time = strptime(next_program.date ~ ' ' ~ next_program.time, '%Y-%m-%d %H:%M') %}
+            {% set time_diff = (program_time - now).total_seconds() / 60 %}
+            {{ time_diff <= 5 and time_diff > 4 and 'Film' in next_program.title }}
+          {% else %}
+            false
+          {% endif %}
+    action:
+      - service: media_player.turn_on
+        target:
+          entity_id: media_player.tv_obyvak
+```
+
 ### Použití v šablonách
 ```yaml
 # Zobrazení aktuálního pořadu
