@@ -1,0 +1,9 @@
+{
+  "name": "Czech TV Program",
+  "content_in_root": false,
+  "filename": "cz_tv_program",
+  "render_readme": true,
+  "domains": ["sensor"],
+  "country": ["CZ"],
+  "homeassistant": "2023.1.0"
+}
